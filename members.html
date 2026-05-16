@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members Area — ClientEngine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 900;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-top {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #f8fafc;
+            letter-spacing: 0.02em;
+        }
+        
+        .logo-bottom {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #3b82f6;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Progress */
+        .progress-section {
+            padding: 2rem;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .progress-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            height: 100%;
+            width: 0%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .section-icon {
+            font-size: 1.25rem;
+        }
+        
+        /* Modules Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .module-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .module-number {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .module-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .module-desc {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .module-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #cbd5e1;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-outline:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .quick-link {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1rem;
+            text-decoration: none;
+            color: #f8fafc;
+            transition: all 0.2s;
+        }
+        
+        .quick-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        
+        .quick-link-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-link-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .quick-link-desc {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        
+        /* Support */
+        .support-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .support-section h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .support-section p {
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">CE</div>
+                <div class="logo-text">
+                    <span class="logo-top">ClientEngine</span>
+                    <span class="logo-bottom">Members Area</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="/members.html">Dashboard</a>
+                <a href="/deliverables.html">Deliverables</a>
+                <a href="/">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Welcome to ClientEngine</h1>
+        <p>Your complete client acquisition system. Start with Module 1 and work through each section at your own pace.</p>
+    </section>
+
+    <section class="progress-section">
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span>Your Progress</span>
+                <span id="progressText">0% Complete</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-content">
+        <h2 class="section-title">
+            <span class="section-icon">📚</span>
+            Core Modules
+        </h2>
+        
+        <div class="modules-grid">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">1</div>
+                    <div class="module-title">CRM Setup Guide</div>
+                </div>
+                <p class="module-desc">Organize your contacts, build your pipeline, and create a system that actually gets used.</p>
+                <div class="module-actions">
+                    <a href="/guides/crm-setup-guide.html" class="btn-primary btn-small">View Guide</a>
+                    <a href="#" class="btn-outline" onclick="markComplete(1)">Mark Complete</a>
+                </div>
+            </div>
+            
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">2</div>
+                    <div class="module-title">Appointment Booking Setup</div>
+                </div>
+                <p class="module-desc">Let prospects book directly into your calendar with automated reminders and no-show reduction.</p>
+                <div class="module-actions">
+                    <a href="/guides/appointment-booking-setup.html" class="btn-primary btn-small">View Guide</a>
+                    <a href="#" class="btn-outline" onclick="markComplete(2)">Mark Complete</a>
+                </div>
+            </div>
+            
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">3</div>
+                    <div class="module-title">Performance Dashboard Guide</div>
+                </div>
+                <p class="module-desc">Track the 5 core metrics that matter. Make decisions based on data, not guesses.</p>
+                <div class="module-actions">
+                    <a href="/guides/performance-dashboard-guide.html" class="btn-primary btn-small">View Guide</a>
+                    <a href="#" class="btn-outline" onclick="markComplete(3)">Mark Complete</a>
+                </div>
+            </div>
+            
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-number">4</div>
+                    <div class="module-title">30-Day Implementation Guide</div>
+                </div>
+                <p class="module-desc">Day-by-day roadmap from zero to fully systemized. Clear daily actions, no overwhelm.</p>
+                <div class="module-actions">
+                    <a href="/guides/30-day-implementation-guide.html" class="btn-primary btn-small">View Guide</a>
+                    <a href="#" class="btn-outline" onclick="markComplete(4)">Mark Complete</a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">
+            <span class="section-icon">⚡</span>
+            Quick Access
+        </h2>
+        
+        <div class="quick-links">
+            <a href="/deliverables.html" class="quick-link">
+                <div class="quick-link-icon">📦</div>
+                <div class="quick-link-title">All Deliverables</div>
+                <div class="quick-link-desc">View complete resource library</div>
+            </a>
+            <a href="/guides/30-day-implementation-guide.html" class="quick-link">
+                <div class="quick-link-icon">📅</div>
+                <div class="quick-link-title">30-Day Plan</div>
+                <div class="quick-link-desc">Your day-by-day roadmap</div>
+            </a>
+            <a href="/guides/crm-setup-guide.html" class="quick-link">
+                <div class="quick-link-icon">✅</div>
+                <div class="quick-link-title">CRM Checklist</div>
+                <div class="quick-link-desc">Setup verification list</div>
+            </a>
+            <a href="/thank-you.html" class="quick-link">
+                <div class="quick-link-icon">🎯</div>
+                <div class="quick-link-title">Getting Started</div>
+                <div class="quick-link-desc">First steps after purchase</div>
+            </a>
+        </div>
+
+        <div class="support-section">
+            <h3>Need Help?</h3>
+            <p>Stuck on something? Have questions? We're here to help.</p>
+            <a href="mailto:support@trueproductsnetwork.com" class="btn-primary">Contact Support</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 ClientEngine by True Products Network. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Simple progress tracking
+        let completedModules = JSON.parse(localStorage.getItem('completedModules') || '[]');
+        
+        function updateProgress() {
+            const totalModules = 4;
+            const completed = completedModules.length;
+            const percentage = Math.round((completed / totalModules) * 100);
+            
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = percentage + '% Complete';
+        }
+        
+        function markComplete(moduleNum) {
+            if (!completedModules.includes(moduleNum)) {
+                completedModules.push(moduleNum);
+                localStorage.setItem('completedModules', JSON.stringify(completedModules));
+                updateProgress();
+                alert('Module ' + moduleNum + ' marked as complete!');
+            }
+        }
+        
+        // Initialize progress on load
+        updateProgress();
+    </script>
+</body>
+</html>

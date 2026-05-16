@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClientEngine — Turn Conversations Into Clients</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 900;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-top {
+            font-size: 1.1rem;
+            font-weight: 900;
+            color: #f8fafc;
+            letter-spacing: 0.02em;
+        }
+        
+        .logo-bottom {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #3b82f6;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 6rem 2rem 4rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .eyebrow {
+            color: #3b82f6;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1 span {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: #f8fafc;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+        
+        /* Problem Section */
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .problem-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .problem-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .problem-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #f8fafc;
+        }
+        
+        .problem-card p {
+            color: #94a3b8;
+        }
+        
+        /* Solution Section */
+        .solution {
+            background: rgba(59, 130, 246, 0.1);
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .solution-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .solution-content h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+        
+        .solution-content p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            margin-bottom: 2rem;
+        }
+        
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .feature-card h4 {
+            color: #3b82f6;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+        
+        /* Deliverables Section */
+        .deliverables {
+            background: rgba(255,255,255,0.02);
+        }
+        
+        .deliverable-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .deliverable-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .deliverable-number {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .deliverable-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .deliverable-content p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            color: #94a3b8;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .price {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-note {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+        
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .deliverable-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">CE</div>
+                <div class="logo-text">
+                    <span class="logo-top">ClientEngine</span>
+                    <span class="logo-bottom">Turn Conversations Into Clients</span>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="/members.html">Members</a>
+                <a href="/deliverables.html">Deliverables</a>
+                <a href="#pricing" class="btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="eyebrow">For Business Owners Who Are Tired of Losing Leads</div>
+        <h1>Turn Conversations Into <span>Clients</span></h1>
+        <p class="hero-subtitle">
+            The complete client acquisition system that captures leads, automates follow-up, 
+            books appointments, and tracks your performance — all in one place.
+        </p>
+        <div class="hero-cta">
+            <a href="#pricing" class="btn-primary btn-large">Get ClientEngine Now</a>
+            <a href="/deliverables.html" class="btn-secondary">See What's Included</a>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Sound Familiar?</h2>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-icon">😰</div>
+                <h3>Leads Slip Through the Cracks</h3>
+                <p>You get inquiries but no system to follow up consistently. Hot leads go cold while you're busy with other things.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">📞</div>
+                <h3>Endless Phone Tag</h3>
+                <p>Playing email tennis to schedule calls wastes everyone's time. Prospects lose interest before you ever talk.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">📊</div>
+                <h3>Flying Blind</h3>
+                <p>You don't know which marketing works, what your conversion rate is, or where leads get stuck.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">😵</div>
+                <h3>Too Many Tools</h3>
+                <p>Spreadsheets, email, calendars, notes — nothing talks to each other. It's a mess.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="solution">
+        <div class="section">
+            <div class="solution-content">
+                <h2>What If Follow-Up Just... Worked?</h2>
+                <p>
+                    ClientEngine is a complete system that handles the entire client journey — 
+                    from first contact to booked appointment to closed deal. No more dropped balls. 
+                    No more wondering what to do next. Just a reliable machine that turns interest into revenue.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">What's Inside ClientEngine</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h4>Module 1</h4>
+                <h3>CRM Setup Guide</h3>
+                <p>Organize your contacts, build your pipeline, and create a system that actually gets used. No more messy spreadsheets.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Module 2</h4>
+                <h3>Appointment Booking Setup</h3>
+                <p>Let prospects book directly into your calendar. Automated reminders reduce no-shows. No more phone tag.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Module 3</h4>
+                <h3>Performance Dashboard</h3>
+                <p>Know your numbers — leads, conversions, costs. Make decisions based on data, not guesses.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Module 4</h4>
+                <h3>30-Day Implementation</h3>
+                <p>Day-by-day roadmap to get everything running. No overwhelm, just clear daily actions.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section deliverables">
+        <h2 class="section-title">Complete Deliverables</h2>
+        <div class="deliverable-list">
+            <div class="deliverable-item">
+                <div class="deliverable-number">1</div>
+                <div class="deliverable-content">
+                    <h3>CRM Setup Guide</h3>
+                    <p>Complete guide to organizing contacts, building pipelines, creating tags, and setting up automation.</p>
+                </div>
+            </div>
+            <div class="deliverable-item">
+                <div class="deliverable-number">2</div>
+                <div class="deliverable-content">
+                    <h3>Appointment Booking Setup</h3>
+                    <p>Calendar integration, booking page design, qualifying questions, confirmation sequences, no-show reduction.</p>
+                </div>
+            </div>
+            <div class="deliverable-item">
+                <div class="deliverable-number">3</div>
+                <div class="deliverable-content">
+                    <h3>Performance Dashboard Guide</h3>
+                    <p>Track the 5 core metrics that matter. Weekly review rituals, forecasting, and optimization.</p>
+                </div>
+            </div>
+            <div class="deliverable-item">
+                <div class="deliverable-number">4</div>
+                <div class="deliverable-content">
+                    <h3>30-Day Implementation Guide</h3>
+                    <p>Day-by-day roadmap from zero to fully systemized. Week-by-week breakdown with daily actions.</p>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/deliverables.html" class="btn-secondary">View All Deliverables</a>
+        </div>
+    </section>
+
+    <section class="cta" id="pricing">
+        <h2>Ready to Fix Your Follow-Up?</h2>
+        <p>Get the complete ClientEngine system and start turning conversations into clients.</p>
+        <div class="price">$197</div>
+        <div class="price-note">One-time payment. Lifetime access. All updates included.</div>
+        <a href="#checkout" class="btn-primary btn-large">Get ClientEngine Now</a>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #64748b;">30-day money-back guarantee. No questions asked.</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 ClientEngine by True Products Network. All rights reserved.</p>
+    </footer>
+</body>
+</html>
